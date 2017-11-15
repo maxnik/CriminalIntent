@@ -43,6 +43,8 @@ public class CrimeListFragment extends Fragment {
         mCrimeRecycleView.setAdapter(mAdapter);
     }
 
+    private static final int VIEW_TYPE_SOLVED = 1;
+
     private class CrimeHolder extends RecyclerView.ViewHolder
                               implements View.OnClickListener {
         private TextView mTitleTextView;
@@ -50,8 +52,8 @@ public class CrimeListFragment extends Fragment {
 
         private Crime mCrime;
 
-        public CrimeHolder(LayoutInflater inflater, ViewGroup parent) {
-            super(inflater.inflate(R.layout.list_item_crime, parent, false));
+        public CrimeHolder(View view) {
+            super(view);
 
             itemView.setOnClickListener(this);
 
@@ -69,6 +71,12 @@ public class CrimeListFragment extends Fragment {
             mCrime = crime;
             mTitleTextView.setText(mCrime.getTitle());
             mDateTextView.setText(mCrime.getDate().toString());
+        }
+    }
+
+    private class SolvedCrimeHolder extends CrimeHolder {
+        public SolvedCrimeHolder(View view) {
+            super(view);
         }
     }
 
@@ -92,10 +100,26 @@ public class CrimeListFragment extends Fragment {
         }
 
         @Override
-        public CrimeHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-            LayoutInflater layoutInflater = LayoutInflater.from(getActivity());
+        public int getItemViewType(int position) {
+            if (mCrimes.get(position).isSolved()) {
+                return VIEW_TYPE_SOLVED;
+            } else {
+                return VIEW_TYPE_SOLVED + 1;
+            }
+        }
 
-            return new CrimeHolder(layoutInflater, parent);
+        @Override
+        public CrimeHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+
+            if (viewType == VIEW_TYPE_SOLVED) {
+                View solvedCrime = LayoutInflater.from(getActivity())
+                        .inflate(R.layout.list_item_crime_solved, parent, false);
+                return new SolvedCrimeHolder(solvedCrime);
+            } else {
+                View unsolvedCrime = LayoutInflater.from(getActivity())
+                        .inflate(R.layout.list_item_crime, parent, false);
+                return new CrimeHolder(unsolvedCrime);
+            }
         }
     }
 }
