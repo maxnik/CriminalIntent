@@ -1,5 +1,6 @@
 package com.bignerdranch.android.criminalintent;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -11,10 +12,10 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import java.text.SimpleDateFormat;
 import java.util.List;
+import java.util.UUID;
 
 /**
  * Created by maxnik on 11/14/17.
@@ -33,27 +34,29 @@ public class CrimeListFragment extends Fragment {
         mCrimeRecycleView = view.findViewById(R.id.crime_recycle_view);
         mCrimeRecycleView.setLayoutManager(new LinearLayoutManager(getActivity()));
 
-        updateUI();
+        CrimeLab crimeLab = CrimeLab.get(getActivity());
+        List<Crime> crimes = crimeLab.getCrimes();
+        mAdapter = new CrimeAdapter(crimes);
+        mCrimeRecycleView.setAdapter(mAdapter);
 
         return view;
     }
 
-    private void updateUI() {
-        CrimeLab crimeLab = CrimeLab.get(getActivity());
-        List<Crime> crimes = crimeLab.getCrimes();
-
-        if (mAdapter == null) {
-            mAdapter = new CrimeAdapter(crimes);
-            mCrimeRecycleView.setAdapter(mAdapter);
-        } else {
-            mAdapter.notifyDataSetChanged();
-        }
-    }
+    private static final int REQUEST_CRIME = 0;
 
     @Override
-    public void onResume() {
-        super.onResume();
-        updateUI();
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (resultCode != Activity.RESULT_OK) {
+            return;
+        }
+
+        if (requestCode == REQUEST_CRIME) {
+            if (data == null) {
+                return;
+            }
+            int crimePosition = CrimeFragment.changedCrimePosition(data);
+            mAdapter.notifyItemChanged(crimePosition);
+        }
     }
 
     private class CrimeHolder extends RecyclerView.ViewHolder
@@ -76,8 +79,8 @@ public class CrimeListFragment extends Fragment {
 
         @Override
         public void onClick(View view) {
-            Intent intent = CrimeActivity.newIntent(getActivity(), mCrime.getId());
-            startActivity(intent);
+            Intent intent = CrimeActivity.newIntent(getActivity(), mCrime.getId(), getAdapterPosition());
+            startActivityForResult(intent, REQUEST_CRIME);
         }
 
         public void bind(Crime crime) {

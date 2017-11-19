@@ -1,5 +1,7 @@
 package com.bignerdranch.android.criminalintent;
 
+import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -27,11 +29,15 @@ public class CrimeFragment extends Fragment {
     private Button mDateButton;
     private CheckBox mSolvedCheckBox;
 
+    private int mCrimePosition;
+
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        UUID crimeId = (UUID) getArguments().getSerializable(ARG_CRIME_ID);
+        Bundle args = getArguments();
+        UUID crimeId = (UUID) args.getSerializable(ARG_CRIME_ID);
+        mCrimePosition = args.getInt(ARG_CRIME_POSITION);
         mCrime = CrimeLab.get(getActivity()).getCrime(crimeId);
     }
 
@@ -51,6 +57,7 @@ public class CrimeFragment extends Fragment {
             @Override
             public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
                 mCrime.setTitle(charSequence.toString());
+                returnResultChanged();
             }
 
             @Override
@@ -69,6 +76,7 @@ public class CrimeFragment extends Fragment {
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, boolean isChecked) {
                 mCrime.setSolved(isChecked);
+                returnResultChanged();
             }
         });
 
@@ -76,13 +84,27 @@ public class CrimeFragment extends Fragment {
     }
 
     private static final String ARG_CRIME_ID = "crime_id";
+    private static final String ARG_CRIME_POSITION = "crime_position";
 
-    public static CrimeFragment newInstance(UUID crimeId) {
+    public static CrimeFragment newInstance(UUID crimeId, int crimePosition) {
         Bundle args = new Bundle();
         args.putSerializable(ARG_CRIME_ID, crimeId);
+        args.putInt(ARG_CRIME_POSITION, crimePosition);
 
         CrimeFragment fragment = new CrimeFragment();
         fragment.setArguments(args);
         return fragment;
+    }
+
+    private static final String EXTRA_CRIME_CHANGED = "com.bignerdranch.android.geoquiz.crime_changed";
+
+    private void returnResultChanged() {
+        Intent data = new Intent();
+        data.putExtra(EXTRA_CRIME_CHANGED, mCrimePosition);
+        getActivity().setResult(Activity.RESULT_OK, data);
+    }
+
+    public static int changedCrimePosition(Intent result) {
+        return result.getIntExtra(EXTRA_CRIME_CHANGED, 0);
     }
 }
