@@ -8,4 +8,6 @@
 
     <string name="first_button">First</string>
     <string name="last_button">Last</string>
+
+    <string name="date_picker_title">Date of crime:</string>
 </resources>

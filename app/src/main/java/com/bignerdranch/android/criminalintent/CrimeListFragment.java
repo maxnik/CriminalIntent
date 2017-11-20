@@ -45,18 +45,9 @@ public class CrimeListFragment extends Fragment {
     private static final int REQUEST_CRIME = 0;
 
     @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (resultCode != Activity.RESULT_OK) {
-            return;
-        }
-
-        if (requestCode == REQUEST_CRIME) {
-            if (data == null) {
-                return;
-            }
-            int crimePosition = CrimeFragment.changedCrimePosition(data);
-            mAdapter.notifyDataSetChanged();
-        }
+    public void onResume() {
+        super.onResume();
+        mAdapter.notifyDataSetChanged();
     }
 
     private class CrimeHolder extends RecyclerView.ViewHolder
