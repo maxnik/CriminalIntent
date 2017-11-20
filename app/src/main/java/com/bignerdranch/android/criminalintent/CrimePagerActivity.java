@@ -59,13 +59,6 @@ public class CrimePagerActivity extends AppCompatActivity {
             }
         });
 
-        for (int i = 0; i < mCrimes.size(); i++) {
-            if (mCrimes.get(i).getId().equals(crimeId)) {
-                mViewPager.setCurrentItem(i);
-                break;
-            }
-        }
-
         mFirstButton = findViewById(R.id.first_button);
         mFirstButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -82,18 +75,32 @@ public class CrimePagerActivity extends AppCompatActivity {
             }
         });
 
+        for (int i = 0; i < mCrimes.size(); i++) {
+            if (mCrimes.get(i).getId().equals(crimeId)) {
+                mViewPager.setCurrentItem(i);
+                disableUnnecessaryButtons(i);
+                break;
+            }
+        }
+
         mViewPager.addOnPageChangeListener(new ViewPager.SimpleOnPageChangeListener() {
             @Override
             public void onPageSelected(int position) {
                 mFirstButton.setEnabled(true);
                 mLastButton.setEnabled(true);
 
-                if (position == 0) {
-                    mFirstButton.setEnabled(false);
-                } else if (position == (mCrimes.size() - 1)) {
-                    mLastButton.setEnabled(false);
-                }
+                disableUnnecessaryButtons(position);
             }
         });
+    }
+
+    private void disableUnnecessaryButtons(int position) {
+        if (position == 0) {
+            mFirstButton.setEnabled(false);
+        }
+
+        if (position == (mCrimes.size() - 1)) {
+            mLastButton.setEnabled(false);
+        }
     }
 }
