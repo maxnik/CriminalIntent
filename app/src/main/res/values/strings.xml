@@ -21,4 +21,6 @@
     </plurals>
 
     <string name="delete_crime">Delete crime</string>
+
+    <string name="no_crimes">There are no crimes yet. </string>
 </resources>
