@@ -84,8 +84,12 @@ public class CrimeListFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
-        mAdapter = new CrimeAdapter(CrimeLab.get(getActivity()).getCrimes());
-        mCrimeRecycleView.swapAdapter(mAdapter, false);
+        //mAdapter = new CrimeAdapter(CrimeLab.get(getActivity()).getCrimes());
+        //mCrimeRecycleView.swapAdapter(mAdapter, false);
+        List<Crime> crimes = CrimeLab.get(getActivity()).getCrimes();
+        mAdapter.setCrimes(crimes);
+        mAdapter.notifyDataSetChanged();
+
         updateSubtitle();
         updateNoCrimesPlaceholder();
     }
@@ -129,6 +133,10 @@ public class CrimeListFragment extends Fragment {
         private List<Crime> mCrimes;
 
         public CrimeAdapter(List<Crime> crimes) {
+            mCrimes = crimes;
+        }
+
+        public void setCrimes(List<Crime> crimes) {
             mCrimes = crimes;
         }
 
