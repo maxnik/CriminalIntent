@@ -19,7 +19,8 @@ import java.util.UUID;
  * Created by maxnik on 11/20/17.
  */
 
-public class CrimePagerActivity extends AppCompatActivity {
+public class CrimePagerActivity extends AppCompatActivity
+                                implements CrimeFragment.Callbacks {
     private ViewPager mViewPager;
     private List<Crime> mCrimes;
 
@@ -102,5 +103,13 @@ public class CrimePagerActivity extends AppCompatActivity {
         if (position == (mCrimes.size() - 1)) {
             mLastButton.setEnabled(false);
         }
+    }
+
+    @Override
+    public void onCrimeUpdated() { }
+
+    @Override
+    public void onCrimeDeleted() {
+        finish();
     }
 }
