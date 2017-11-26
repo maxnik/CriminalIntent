@@ -356,6 +356,7 @@ public class CrimeFragment extends Fragment {
             mPhotoView.setEnabled(false);
             mPhotoView.setImageDrawable(null);
         } else {
+            mPhotoView.setEnabled(true);
             Bitmap bitmap = PictureUtils.getScaledBitmap(mPhotoFile.getPath(), mPhotoView.getWidth(), mPhotoView.getHeight());
             mPhotoView.setImageBitmap(bitmap);
         }
