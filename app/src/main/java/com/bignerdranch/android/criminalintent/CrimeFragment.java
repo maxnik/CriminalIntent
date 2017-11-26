@@ -55,8 +55,6 @@ public class CrimeFragment extends Fragment {
     private ImageButton mPhotoButton;
     private ImageView mPhotoView;
 
-    private int mCrimePosition;
-
     private static final String DIALOG_DATE = "DialogDate";
     private static final String DIALOG_TIME = "DialogTime";
     private static final String DIALOG_PHOTO = "DialogPhoto";
@@ -73,7 +71,6 @@ public class CrimeFragment extends Fragment {
 
         Bundle args = getArguments();
         UUID crimeId = (UUID) args.getSerializable(ARG_CRIME_ID);
-        mCrimePosition = args.getInt(ARG_CRIME_POSITION);
         mCrime = CrimeLab.get(getActivity()).getCrime(crimeId);
         mPhotoFile = CrimeLab.get(getActivity()).getPhotoFile(mCrime);
     }
@@ -217,12 +214,10 @@ public class CrimeFragment extends Fragment {
     }
 
     private static final String ARG_CRIME_ID = "crime_id";
-    private static final String ARG_CRIME_POSITION = "crime_position";
 
-    public static CrimeFragment newInstance(UUID crimeId, int crimePosition) {
+    public static CrimeFragment newInstance(UUID crimeId) {
         Bundle args = new Bundle();
         args.putSerializable(ARG_CRIME_ID, crimeId);
-        args.putInt(ARG_CRIME_POSITION, crimePosition);
 
         CrimeFragment fragment = new CrimeFragment();
         fragment.setArguments(args);
@@ -230,16 +225,6 @@ public class CrimeFragment extends Fragment {
     }
 
     private static final String EXTRA_CRIME_CHANGED = "com.bignerdranch.android.geoquiz.crime_changed";
-
-    private void returnResultChanged() {
-        Intent data = new Intent();
-        data.putExtra(EXTRA_CRIME_CHANGED, mCrimePosition);
-        getActivity().setResult(Activity.RESULT_OK, data);
-    }
-
-    public static int changedCrimePosition(Intent result) {
-        return result.getIntExtra(EXTRA_CRIME_CHANGED, 0);
-    }
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
