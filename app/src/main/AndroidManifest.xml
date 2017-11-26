@@ -17,7 +17,8 @@
             </intent-filter>
         </activity>
         <activity android:name=".CrimePagerActivity"
-            android:parentActivityName=".CrimeListActivity">
+                  android:windowSoftInputMode="stateHidden"
+                  android:parentActivityName=".CrimeListActivity">
 
         </activity>
 
